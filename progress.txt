@@ -1,0 +1,8 @@
+## Progress
+
+### Day 1
+- setup and familiarize code
+- run test to understand beforeEach/afterEach
+- test API in Insomnia 
+- write test for helper/sql.js/{sqlForPartialUpdate}
+- document the function 

@@ -30,14 +30,17 @@ async function commonBeforeAll() {
       ]);
 }
 
+//initiates statements in a single transaction 
 async function commonBeforeEach() {
   await db.query("BEGIN");
 }
 
+//Rolls back current transaction and any updates will be discarded
 async function commonAfterEach() {
   await db.query("ROLLBACK");
 }
 
+//close any open transactions after all tests
 async function commonAfterAll() {
   await db.end();
 }

@@ -41,6 +41,7 @@ class User {
       // compare hashed password to a new hash from password
       const isValid = await bcrypt.compare(password, user.password);
       if (isValid === true) {
+        //why delete the pw..?
         delete user.password;
         return user;
       }
@@ -64,13 +65,15 @@ class User {
            WHERE username = $1`,
         [username],
     );
-
+      //If a user exists with that username, return error.
     if (duplicateCheck.rows[0]) {
       throw new BadRequestError(`Duplicate username: ${username}`);
     }
 
+    //hash the new registered password 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
+    //insert new data into db
     const result = await db.query(
           `INSERT INTO users
            (username,
@@ -96,7 +99,7 @@ class User {
     return user;
   }
 
-  /** Find all users.
+  /** Find all users alphabetically.
    *
    * Returns [{ username, first_name, last_name, email, is_admin }, ...]
    **/
@@ -171,6 +174,8 @@ class User {
           lastName: "last_name",
           isAdmin: "is_admin",
         });
+    
+    // set username var to be after all of the values
     const usernameVarIdx = "$" + (values.length + 1);
 
     const querySql = `UPDATE users 
