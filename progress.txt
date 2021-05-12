@@ -1,8 +1,12 @@
 ## Progress
 
-### Day 1
+### Part 1
 - setup and familiarize code
 - run test to understand beforeEach/afterEach
 - test API in Insomnia 
 - write test for helper/sql.js/{sqlForPartialUpdate}
-- document the function 
+- Document the function of sqlForPartialUpdate
+    1. sqlForPartialUpdate passes in 2 documents, first is the data and second is the format of jsToSql.
+    2. Once data is passed in, it is turned into an array and then mapped to create a key and variable value like 'first_name=$1, age='$2'. This is in preparation for the UPDATE syntax in psql. 
+    3. The function returns the formatted syntax for psql as well as actual values that will be updated. 
+    4. In models/user.js we can destructure the return of sqlForPartialUpdate() of the columns to be updated as well as the values which help to efficiently write the UPDATE syntax in psql. 
