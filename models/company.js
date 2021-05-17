@@ -49,15 +49,72 @@ class Company {
    * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
    * */
 
-  static async findAll() {
+  static async findAll(query) {
+    
+
+    let { name, minEmployees, maxEmployees } = query;
+
+    console.log(query)
+        //grabs all values from query and parseInt
+    let values =  Object.values(query).map(function (el) {
+      return (el);
+    })
+    console.log(values)
+
+
+    //syntax for name query
+    //not sure what to do when there is no name query
+    let sqlNameFilter = '';
+    if (name) {
+      sqlNameFilter =`WHERE name ILIKE $1`
+    } 
+
+    //syntax for num_employee query portion
+    //keys are not turning into int
+    let sqlEmployeeNum;
+    if (maxEmployees && minEmployees) {
+      sqlEmployeeNum =`BETWEEN ${parseInt(query.minEmployees)} AND ${parseInt(query.maxEmployees)}`
+    }
+    if (query.maxEmployees && !(query.minEmployees)) {
+      sqlEmployeeNum = `>= ${query.maxEmployees}`
+    }
+    if (!(query.maxEmployees) && query.minEmployees) {
+      sqlEmployeeNum = `<= ${query.minEmployees}`
+    }
+
+
+    // //create var array based on number of parameters 
+    // let varIdx = keys.map(function(el, idx) {
+    //   return (`$${idx+1}`)
+    // })
+    // //format varIdx for psql syntax
+    // varIdx = varIdx.join(',')
+    // console.log(varIdx)
+
+    //psql syntax with filter
     const companiesRes = await db.query(
           `SELECT handle,
-                  name,
-                  description,
-                  num_employees AS "numEmployees",
-                  logo_url AS "logoUrl"
-           FROM companies
-           ORDER BY name`);
+          name,
+          description,
+          num_employees AS "numEmployees",
+          logo_url AS "logoUrl"
+          FROM companies
+          ${sqlNameFilter}
+          GROUP BY companies.handle
+          ORDER BY name
+          LIMIT 3`);
+    console.log(companiesRes.rows)
+     return companiesRes.rows;
+    
+    // OG syntax
+    // const companiesRes = await db.query(
+    //       `SELECT handle,
+    //               name,
+    //               description,
+    //               num_employees AS "numEmployees",
+    //               logo_url AS "logoUrl"
+    //        FROM companies
+    //        ORDER BY name`);
     return companiesRes.rows;
   }
 

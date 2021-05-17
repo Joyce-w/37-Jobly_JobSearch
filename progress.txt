@@ -19,3 +19,15 @@ Requirements:
     - Write unit test for the model exercising in different ways so you know different combos of filtering work.
     - Write test for the route to ensure it validates/uses model properly.
     - document all code clearly, so future team members should be able to understand how to use them from docstring.
+
+Psql full syntax so far:
+    SELECT handle,
+    name,
+    description,
+    num_employees AS "numEmployees",
+    logo_url AS "logoUrl"
+    FROM companies
+    WHERE name ILIKE '%andr%'
+    GROUP BY companies.handle
+    HAVING num_employees BETWEEN 100 AND 500
+    ORDER BY name;
