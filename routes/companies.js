@@ -5,12 +5,13 @@
 const jsonschema = require("jsonschema");
 const express = require("express");
 
-const { BadRequestError } = require("../expressError");
+const { BadRequestError, ExpressError } = require("../expressError");
 const { ensureLoggedIn } = require("../middleware/auth");
 const Company = require("../models/company");
 
 const companyNewSchema = require("../schemas/companyNew.json");
 const companyUpdateSchema = require("../schemas/companyUpdate.json");
+const companyFilter = require("../schemas/companyFilter.json");
 
 const router = new express.Router();
 
@@ -52,8 +53,18 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
 
 router.get("/", async function (req, res, next) {
   try {
-    const companies = await Company.findAll();
+    //validate that filter fields are valid with companyFilter schema
+    const validator = jsonschema.validate(req.query, companyFilter);
+    if (!validator.valid) {
+      const errs = validator.errors.map(e => e.stack);
+      throw new BadRequestError(errs);
+    }
+    //pass in valid query into findAll()
+    const companies = await Company.findAll(req.query);
     return res.json({ companies });
+    //pass into Companies.findAll();
+    // const companies = await Company.findAll();
+    // return res.json({ companies });
   } catch (err) {
     return next(err);
   }

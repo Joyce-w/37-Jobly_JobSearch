@@ -1,6 +1,6 @@
 ## Progress
 
-### Part 1
+### Part 1 (6 hrs)
 - setup and familiarize code
 - run test to understand beforeEach/afterEach
 - test API in Insomnia 
@@ -12,3 +12,10 @@
     4. In models/user.js we can destructure the return of sqlForPartialUpdate() of the columns to be updated as well as the values which help to efficiently write the UPDATE syntax in psql. 
 
 ### Part 2 
+- Add filter to GET /companies. Filter based on optional filtering criteria: name, minEmployees, maxEmployees. ( if minEmployees > maxEmployees respond with a 400 error)
+Requirements:
+    - If user is not filtering by minEmployees/maxEmployeees, SELECT statement should not include anything about num_employees.
+    - validate the request to not contain inappropriate fields. Do actual filtering in the models.
+    - Write unit test for the model exercising in different ways so you know different combos of filtering work.
+    - Write test for the route to ensure it validates/uses model properly.
+    - document all code clearly, so future team members should be able to understand how to use them from docstring.
