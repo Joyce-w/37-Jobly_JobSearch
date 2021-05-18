@@ -32,3 +32,9 @@ Psql full syntax so far:
     ORDER BY name;
 
     Didn't use varibale index in query search because the array at the end of the query would cause a problem if there was no specific query. Did all the syntax seperately, then stuck it in.
+
+Code to do: 
+if max < min, throw an error
+throw error for wrong query keyword
+no query does not work (if (no query)
+parse max/minEmployees into numbers
