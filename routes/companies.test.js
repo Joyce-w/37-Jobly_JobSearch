@@ -75,21 +75,18 @@ describe("GET /companies", function () {
               handle: "c1",
               name: "C1",
               description: "Desc1",
-              numEmployees: 1,
               logoUrl: "http://c1.img",
             },
             {
               handle: "c2",
               name: "C2",
               description: "Desc2",
-              numEmployees: 2,
               logoUrl: "http://c2.img",
             },
             {
               handle: "c3",
               name: "C3",
               description: "Desc3",
-              numEmployees: 3,
               logoUrl: "http://c3.img",
             },
           ],
@@ -106,6 +103,56 @@ describe("GET /companies", function () {
         .set("authorization", `Bearer ${u1Token}`);
     expect(resp.statusCode).toEqual(500);
   });
+
+    test("works: name filter ", async function () {
+    const resp = await request(app).get("/companies/?name=c");
+      expect(resp.body).toEqual({
+        companies:
+            [
+              {
+                handle: "c1",
+                name: "C1",
+                description: "Desc1",
+                logoUrl: "http://c1.img",
+              },
+              {
+                handle: "c2",
+                name: "C2",
+                description: "Desc2",
+                logoUrl: "http://c2.img",
+              },
+              {
+                handle: "c3",
+                name: "C3",
+                description: "Desc3",
+                logoUrl: "http://c3.img",
+              },
+            ],
+      });
+    });
+  
+    test("works: num_employee filter ", async function () {
+      const resp = await request(app).get("/companies/?minEmployees=3");
+      expect(resp.body).toEqual({
+        companies:
+            [
+              {
+                handle: "c3",
+                name: "C3",
+                description: "Desc3",
+                num_Employees: 3,
+                logoUrl: "http://c3.img",
+              }
+            ]
+      });
+    });
+  
+  test("works: invalid field ", async function () {
+      const resp = await request(app).get("/companies/?testInvalid=3");    
+      expect(resp.statusCode).toEqual(400);
+      expect(resp.body.error.message[0]).toEqual("instance additionalProperty \"testInvalid\" exists in instance when not allowed")
+    });
+  
 });
 
 /************************************** GET /companies/:handle */
