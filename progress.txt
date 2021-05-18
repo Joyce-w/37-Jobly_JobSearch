@@ -11,30 +11,15 @@
     3. The function returns the formatted syntax for psql as well as actual values that will be updated. 
     4. In models/user.js we can destructure the return of sqlForPartialUpdate() of the columns to be updated as well as the values which help to efficiently write the UPDATE syntax in psql. 
 
-### Part 2 
+### Part 2 (7+1.5hr)
 - Add filter to GET /companies. Filter based on optional filtering criteria: name, minEmployees, maxEmployees. ( if minEmployees > maxEmployees respond with a 400 error)
 Requirements:
     - If user is not filtering by minEmployees/maxEmployeees, SELECT statement should not include anything about num_employees.
     - validate the request to not contain inappropriate fields. Do actual filtering in the models.
+    
     - Write unit test for the model exercising in different ways so you know different combos of filtering work.
     - Write test for the route to ensure it validates/uses model properly.
     - document all code clearly, so future team members should be able to understand how to use them from docstring.
 
-Psql full syntax so far:
-    SELECT handle,
-    name,
-    description,
-    num_employees AS "numEmployees",
-    logo_url AS "logoUrl"
-    FROM companies
-    WHERE companies.num_employees <= 70 AND name ILIKE '%a%'
-    GROUP BY companies.handle
-    ORDER BY name;
-
-    Didn't use varibale index in query search because the array at the end of the query would cause a problem if there was no specific query. Did all the syntax seperately, then stuck it in.
-
-Code to do: 
-if max < min, throw an error
-throw error for wrong query keyword
-no query does not work (if (no query)
-parse max/minEmployees into numbers
+Summary:
+    -Didn't use varibale index in query search because the array at the end of the query would cause a problem if there was no criteria in the query. Did all the syntax seperately, then integrated the syntax in.

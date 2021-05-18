@@ -52,64 +52,87 @@ class Company {
   static async findAll(query) {
     
     //destructure so only the optional 3 filter parameters can be worked with
-    let {  minEmployees, maxEmployees } = query;
+    let { minEmployees, maxEmployees } = query;
 
+    //throw error for any invalid fields
+    if (!minEmployees || !maxEmployees || !query.name) {
+      throw new BadRequestError("Invalid field to search")
+    }
+    
     //make the employee params integers
+    let min;
+    let max;
 
-      //grabs all values from query and parseInt
-    let values = Object.values(query).map(function (el) {
-      return parseInt(el);
-    }); 
-
+    if (minEmployees) {min = parseInt(minEmployees)};
+    if (maxEmployees) { max = parseInt(maxEmployees) };
+    
     //if max< min Employees throw error 
- 
-    //syntax for name query
-    let sqlNameFilter = '';
+    if (min > max) {
+      throw new BadRequestError("maxEmployees cannot be less than minEmployees!")
+    }
+
+    /*The following code consists of 3 general portions. Syntax for: WHERE, name query, and numeber query. Based on the data from query, the sql syntax will adjust accordingly and be combined at the end to be integrated into one syntax.*/
+    
+    //Count number of queries passed in to determine syntax.
+    let numKeys = Object.keys(query).length
+    
+    // WHERE syntax
+    // if there were queries passed in, the variable would have WHERE, otherwise blank.
+    //checking for 'query' will return true, need to be more specific by checking parameters.
+    let whereClause = '';
+    if(numKeys !== 0) {
+      whereClause = 'WHERE'
+    }
+
+    //Name syntax
+    //syntax for name query. if there is a min/max that was passed in, will add on 'AND' to syntax
+    let sqlNameFilterSyntax = '';
     if (query.name) {
-      sqlNameFilter = `WHERE name ILIKE '%${query.name}%'`
+      if (!(min || max)) {
+        sqlNameFilterSyntax = `name ILIKE '%${query.name}%'`        
+      } else {
+        sqlNameFilterSyntax = `name ILIKE '%${query.name}%' AND`
+      }
     } 
 
-    //syntax for num_employee query portion
-    //keys are not turning into int
-    let sqlEmployeeNum;
-    if (maxEmployees && minEmployees) {
-      sqlEmployeeNum =`BETWEEN ${parseInt(minEmployees)} AND ${parseInt(maxEmployees)}`
+    //num_Employee syntax
+    //syntax for num_employee query portion. Based on range that was passed in, will write appropriate syntax to query.
+
+
+    let sqlEmployeeNumSyntax = '';
+
+    if(min && max) {
+      sqlEmployeeNumSyntax = `companies.num_employees BETWEEN ${min} AND ${max}`
     }
     // syntax for maxEmployee
-    if (!maxEmployees) {
-      sqlEmployeeNum = `>= ${parseInt(minEmployees)}`
+    if (!max && min) {
+      sqlEmployeeNumSyntax = `companies.num_employees >= ${min}`
     }   // syntax for minEmployee
-    if (!minEmployees) {
-      sqlEmployeeNum = `<= ${parseInt(maxEmployees)}`
+    if (!min && max) {
+      sqlEmployeeNumSyntax = `companies.num_employees <= ${max}`
+    }
+    //Only show num_employees when there is actual filter criteria
+    let num_employees = '';
+    if (sqlEmployeeNumSyntax !== '') {
+      num_employees = `num_employees AS "num_Employees",`
     }
 
-    const havingSyntax = `HAVING num_employees ${sqlEmployeeNum}`
+    // if there is data in the query, combine all the syntax from above into one.
+    let combinedWhereSyntax = '';
+    if (numKeys !== 0) {
+      combinedWhereSyntax = `${whereClause} ${sqlNameFilterSyntax} ${sqlEmployeeNumSyntax}`
+    } 
 
-    //psql syntax with filter
+    //psql syntax with filter syntax
     const companiesRes = await db.query(
           `SELECT handle,
           name,
           description,
-          num_employees AS "numEmployees",
+          ${num_employees}
           logo_url AS "logoUrl"
-          FROM companies
-          ${sqlNameFilter}
-          GROUP BY companies.handle
-          ${havingSyntax}
+          FROM companies ${combinedWhereSyntax}GROUP BY companies.handle
           ORDER BY name;`);
-    // console.log(companiesRes.rows)
      return companiesRes.rows;
-    
-    // OG syntax
-    // const companiesRes = await db.query(
-    //       `SELECT handle,
-    //               name,
-    //               description,
-    //               num_employees AS "numEmployees",
-    //               logo_url AS "logoUrl"
-    //        FROM companies
-    //        ORDER BY name`);
-    return companiesRes.rows;
   }
 
   /** Given a company handle, return data about company.
