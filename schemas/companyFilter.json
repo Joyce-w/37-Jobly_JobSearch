@@ -7,90 +7,29 @@
     "default": {},
     "examples": [
         {
-            "companies": [
-                {
-                    "name": "Andrew, Aria, and Marrow",
-                    "minEmployee": 0,
-                    "maxEmployee": 10000
-                }
-            ]
+            "name": "Andrew, Aria, and Marrow",
+            "minEmployees": 0,
+            "maxEmployees": 10000
         }
     ],
+    "additionalProperties": false,
     "properties": {
-        "companies": {
-            "$id": "#/properties/companies",
-            "type": "array",
-            "title": "The companies schema",
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "title": "The name schema",
             "description": "An explanation about the purpose of this instance.",
-            "default": [],
+            "default": "",
             "examples": [
-                [
-                    {
-                        "name": "Andrew, Aria, and Marrow",
-                        "minEmployee": 0,
-                        "maxEmployee": 10000
-                    }
-                ]
-            ],
-            "additionalItems": true,
-            "items": {
-                "$id": "#/properties/companies/items",
-                "anyOf": [
-                    {
-                        "$id": "#/properties/companies/items/anyOf/0",
-                        "type": "object",
-                        "title": "The first anyOf schema",
-                        "description": "An explanation about the purpose of this instance.",
-                        "default": {},
-                        "examples": [
-                            {
-                                "name": "Andrew, Aria, and Marrow",
-                                "minEmployee": 0,
-                                "maxEmployee": 10000
-                            }
-                        ],
-                        "required": [
-                            "name",
-                            "minEmployee",
-                            "maxEmployee"
-                        ],
-                        "properties": {
-                            "name": {
-                                "$id": "#/properties/companies/items/anyOf/0/properties/name",
-                                "type": "string",
-                                "title": "The name schema",
-                                "description": "An explanation about the purpose of this instance.",
-                                "default": "",
-                                "examples": [
-                                    "Andrew, Aria, and Marrow"
-                                ]
-                            },
-                            "minEmployee": {
-                                "$id": "#/properties/companies/items/anyOf/0/properties/minEmployee",
-                                "type": "integer",
-                                "title": "The minEmployee schema",
-                                "description": "An explanation about the purpose of this instance.",
-                                "default": 0,
-                                "examples": [
-                                    0
-                                ]
-                            },
-                            "maxEmployee": {
-                                "$id": "#/properties/companies/items/anyOf/0/properties/maxEmployee",
-                                "type": "integer",
-                                "title": "The maxEmployee schema",
-                                "description": "An explanation about the purpose of this instance.",
-                                "default": 0,
-                                "examples": [
-                                    10000
-                                ]
-                            }
-                        },
-                        "additionalProperties": true
-                    }
-                ]
-            }
+                "Andrew, Aria, and Marrow"
+            ]
+        },
+        "minEmployees":{
+            "type": "string"
+        },
+        "maxEmployees":{
+            "type": "string"
         }
     },
-    "additionalProperties": true
+    "required": []
 }

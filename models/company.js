@@ -51,45 +51,39 @@ class Company {
 
   static async findAll(query) {
     
+    //destructure so only the optional 3 filter parameters can be worked with
+    let {  minEmployees, maxEmployees } = query;
 
-    let { name, minEmployees, maxEmployees } = query;
+    //make the employee params integers
 
-    console.log(query)
-        //grabs all values from query and parseInt
-    let values =  Object.values(query).map(function (el) {
-      return (el);
-    })
-    console.log(values)
+      //grabs all values from query and parseInt
+    let values = Object.values(query).map(function (el) {
+      return parseInt(el);
+    }); 
 
-
+    //if max< min Employees throw error 
+ 
     //syntax for name query
-    //not sure what to do when there is no name query
     let sqlNameFilter = '';
-    if (name) {
-      sqlNameFilter =`WHERE name ILIKE $1`
+    if (query.name) {
+      sqlNameFilter = `WHERE name ILIKE '%${query.name}%'`
     } 
 
     //syntax for num_employee query portion
     //keys are not turning into int
     let sqlEmployeeNum;
     if (maxEmployees && minEmployees) {
-      sqlEmployeeNum =`BETWEEN ${parseInt(query.minEmployees)} AND ${parseInt(query.maxEmployees)}`
+      sqlEmployeeNum =`BETWEEN ${parseInt(minEmployees)} AND ${parseInt(maxEmployees)}`
     }
-    if (query.maxEmployees && !(query.minEmployees)) {
-      sqlEmployeeNum = `>= ${query.maxEmployees}`
-    }
-    if (!(query.maxEmployees) && query.minEmployees) {
-      sqlEmployeeNum = `<= ${query.minEmployees}`
+    // syntax for maxEmployee
+    if (!maxEmployees) {
+      sqlEmployeeNum = `>= ${parseInt(minEmployees)}`
+    }   // syntax for minEmployee
+    if (!minEmployees) {
+      sqlEmployeeNum = `<= ${parseInt(maxEmployees)}`
     }
 
-
-    // //create var array based on number of parameters 
-    // let varIdx = keys.map(function(el, idx) {
-    //   return (`$${idx+1}`)
-    // })
-    // //format varIdx for psql syntax
-    // varIdx = varIdx.join(',')
-    // console.log(varIdx)
+    const havingSyntax = `HAVING num_employees ${sqlEmployeeNum}`
 
     //psql syntax with filter
     const companiesRes = await db.query(
@@ -101,9 +95,9 @@ class Company {
           FROM companies
           ${sqlNameFilter}
           GROUP BY companies.handle
-          ORDER BY name
-          LIMIT 3`);
-    console.log(companiesRes.rows)
+          ${havingSyntax}
+          ORDER BY name;`);
+    // console.log(companiesRes.rows)
      return companiesRes.rows;
     
     // OG syntax

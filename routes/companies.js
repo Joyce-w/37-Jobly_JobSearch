@@ -55,7 +55,8 @@ router.get("/", async function (req, res, next) {
   try {
     //validate that filter fields are valid with companyFilter schema
     // not validating correctly?
-    const validator = jsonschema.validate(req.query, companyFilter);
+    console.log(req.query)
+    const validator = jsonschema.validate(req.query.maxEmployee, { "type" : "integer" });
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
@@ -118,7 +119,6 @@ router.patch("/:handle", ensureLoggedIn, async function (req, res, next) {
  *
  * Authorization: login
  */
-
 router.delete("/:handle", ensureLoggedIn, async function (req, res, next) {
   try {
     await Company.remove(req.params.handle);

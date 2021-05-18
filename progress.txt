@@ -27,7 +27,8 @@ Psql full syntax so far:
     num_employees AS "numEmployees",
     logo_url AS "logoUrl"
     FROM companies
-    WHERE name ILIKE '%andr%'
+    WHERE companies.num_employees <= 70 AND name ILIKE '%a%'
     GROUP BY companies.handle
-    HAVING num_employees BETWEEN 100 AND 500
     ORDER BY name;
+
+    Didn't use varibale index in query search because the array at the end of the query would cause a problem if there was no specific query. Did all the syntax seperately, then stuck it in.
