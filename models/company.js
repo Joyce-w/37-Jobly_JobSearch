@@ -50,7 +50,6 @@ class Company {
    * */
 
   static async findAll(query) {
-    
     //destructure so only the optional 3 filter parameters can be worked with
     let { minEmployees, maxEmployees } = query;
     
@@ -92,8 +91,6 @@ class Company {
 
     //num_Employee syntax
     //syntax for num_employee query portion. Based on range that was passed in, will write appropriate syntax to query.
-
-
     let sqlEmployeeNumSyntax = '';
 
     if(min && max) {
