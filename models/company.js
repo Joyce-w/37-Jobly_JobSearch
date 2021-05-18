@@ -53,11 +53,6 @@ class Company {
     
     //destructure so only the optional 3 filter parameters can be worked with
     let { minEmployees, maxEmployees } = query;
-
-    //throw error for any invalid fields
-    if (!minEmployees || !maxEmployees || !query.name) {
-      throw new BadRequestError("Invalid field to search")
-    }
     
     //make the employee params integers
     let min;
