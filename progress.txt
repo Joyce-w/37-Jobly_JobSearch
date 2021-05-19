@@ -16,15 +16,29 @@
 Requirements:
     - If user is not filtering by minEmployees/maxEmployeees, SELECT statement should not include anything about num_employees.
     - validate the request to not contain inappropriate fields. Do actual filtering in the models.
-    
     - Write unit test for the model exercising in different ways so you know different combos of filtering work.
     - Write test for the route to ensure it validates/uses model properly.
     - document all code clearly, so future team members should be able to understand how to use them from docstring.
 
-Summary:
-    - Didn't use varibale index in query search because the array at the end of the query would cause a problem if there was no criteria in the query. Did all the syntax seperately, then integrated the syntax in.
-    - Test models by trying different queries. 
-    - Testing routes called for updating jsonSchema to validate valid fields.
-    - Since there were is no schema type to validate numbers as strings, I set a limit to the maxEmployee length to be 7 meaning the maxEmployee would cap at 9,999,999.
-    - Passing in a string would cause an error since the model will be unable to parse it. 
-    -Testing took an hour to write/fix and the query syntax took 8.5hrs!
+    Summary:
+        - Didn't use varibale index in query search because the array at the end of the query would cause a problem if there was no criteria in the query. Did all the syntax seperately, then integrated the syntax in.
+        - Test models by trying different queries. 
+        - Testing routes called for updating jsonSchema to validate valid fields.
+        - Since there were is no schema type to validate numbers as strings, I set a limit to the maxEmployee length to be 7 meaning the maxEmployee would cap at 9,999,999.
+        - Passing in a string would cause an error since the model will be unable to parse it. 
+        -Testing took an hour to write/fix and the query syntax took 8.5hrs!
+    
+### Part 3
+
+- Some routes do not have autherization checks:
+    ##### Companies:
+    - list of company/info should be open to everyone, even anon users.
+    - create/update/deleting companies are only possible for users who are logged in with is_admin flag in the db.
+    - do not need to SELECT info about the user on every request, but auth credit should provide info suitable for this requirement. 
+    - Update tests to demo security changes.
+
+    Todo: not sure how to view /:user with own user credential
+
+Summary: 
+    - Since only admins can create, update, delete, would make sense to verify admin in 'ensureLoggedIn()'
+    - Only admins can , create,get list of users, update, delete. admin or that user can get info on a single user.
