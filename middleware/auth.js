@@ -33,12 +33,13 @@ function authenticateJWT(req, res, next) {
  * If not, raises Unauthorized.
  */
 
-function ensureLoggedIn(req, res, next) {
+function ensureAdmin(req, res, next) {
   try {
+    console.log(res.locals.user)
     //checks to see if admin is in the payload
     if (res.locals.user) {
       const {isAdmin } = res.locals.user;
-      if (isAdmin === true) {
+      if (isAdmin === true ) {
         return next()
       }
     }
@@ -49,8 +50,23 @@ function ensureLoggedIn(req, res, next) {
   }
 }
 
+/** Middleware to authenticate correct user or admin   
+ * Must be user and a user with a username match the params or an admin to access.
+*/
+function ensureValidUserOrAdmin(req, res, next) {
+  try {
+    const user = res.locals.user;
+    if (!(user && (user.username === req.params.username || user.isAdmin))) {
+      throw new UnauthorizedError();
+    }
+    return next();
+  } catch (err) {
+    return next(err)
+  }
+}
 
 module.exports = {
   authenticateJWT,
-  ensureLoggedIn,
+  ensureAdmin,
+  ensureValidUserOrAdmin
 };

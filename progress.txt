@@ -28,17 +28,18 @@ Requirements:
         - Passing in a string would cause an error since the model will be unable to parse it. 
         -Testing took an hour to write/fix and the query syntax took 8.5hrs!
     
-### Part 3
+### Part 3 (1)
 
-- Some routes do not have autherization checks:
+- Some routes do not have authorization checks:
     ##### Companies:
     - list of company/info should be open to everyone, even anon users.
     - create/update/deleting companies are only possible for users who are logged in with is_admin flag in the db.
     - do not need to SELECT info about the user on every request, but auth credit should provide info suitable for this requirement. 
     - Update tests to demo security changes.
 
-    Todo: not sure how to view /:user with own user credential
+
 
 Summary: 
     - Since only admins can create, update, delete, would make sense to verify admin in 'ensureLoggedIn()'
     - Only admins can , create,get list of users, update, delete. admin or that user can get info on a single user.
+    - Create another middleware that checks for either the correct user or an admin. Users that go to view, update, delete their own information will have access.
