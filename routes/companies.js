@@ -54,8 +54,6 @@ router.post("/", ensureAdmin, async function (req, res, next) {
 router.get("/", async function (req, res, next) {
   try {
     //validate that filter fields are valid with companyFilter schema
-    // not validating correctly?
-    console.log(req.query)
     const validator = jsonschema.validate(req.query, companyFilter);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);

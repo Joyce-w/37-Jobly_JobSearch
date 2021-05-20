@@ -37,9 +37,18 @@ Requirements:
     - do not need to SELECT info about the user on every request, but auth credit should provide info suitable for this requirement. 
     - Update tests to demo security changes.
 
-
-
 Summary: 
     - Since only admins can create, update, delete, would make sense to verify admin in 'ensureLoggedIn()'
     - Only admins can , create,get list of users, update, delete. admin or that user can get info on a single user.
     - Create another middleware that checks for either the correct user or an admin. Users that go to view, update, delete their own information will have access.
+
+### Part 4
+
+    - Make jobs model.
+    - updating a job should never change ID or the company associiated with a job.
+    - Write test for the model
+
+
+Summary:
+    - NUMERIC is more precise than using FLOAT and holds a larger byte. Since equity can be a small number, it is more accurate to use NUMERIC.
+    - Did not do a duplicateCheck function on Job.create because some actual companies listing identical job titles.
