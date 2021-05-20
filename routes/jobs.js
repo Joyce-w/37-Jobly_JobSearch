@@ -69,7 +69,7 @@ router.get("/:id", async function (req, res, next) {
     }
 });
 
-/*PATCH /:id {12} =>  */
+/*PATCH /:id  => (updated){ title, salary, equity} */
 router.patch("/:id", ensureAdmin, async function (req, res, next) {
     try {
         //validate json to be patch
@@ -84,5 +84,14 @@ router.patch("/:id", ensureAdmin, async function (req, res, next) {
         return next(e);
     }
 });
+
+router.delete("/:id", ensureAdmin, async function (req, res, next) {
+    try {
+        await Job.delete(req.params.id);
+        return res.json({ deleted: req.params.id });
+    } catch (e) {
+        return next(e);
+    }
+})
 
 module.exports = router;

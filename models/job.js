@@ -1,3 +1,4 @@
+const { compareSync } = require("bcrypt");
 const { query } = require("express");
 const db = require("../db");
 const { BadRequestError, NotFoundError } = require("../expressError");
@@ -78,6 +79,19 @@ class Job {
     
     /*Delete existing job post, must be admin */
 
+    static async delete(id) {
+        const result = await db.query(
+            `DELETE
+            FROM jobs
+            WHERE id = $1
+            RETURNING title`,
+            [id]);
+        const company = result.rows[0];
+
+        if (!company) {
+            throw new NotFoundError(`No id of ${id} found to be deleted.`)
+        }
+    }
 }
 
 module.exports = Job;
