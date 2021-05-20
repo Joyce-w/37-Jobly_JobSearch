@@ -21,7 +21,7 @@ class Job {
     /**Get all job listing */
     static async findAll() {
         const jobRes = await db.query(
-            `SELECT title, 
+            `SELECT id, title, 
             salary,
             equity,
             company_handle FROM jobs
@@ -32,6 +32,21 @@ class Job {
 
     /*Get single job detail*/
 
+    static async getJob(id) {
+        const job = await db.query(
+            `SELECT id, title, 
+            salary,
+            equity,
+            company_handle FROM jobs
+            WHERE id = $1
+            ORDER BY title`,
+            [id]
+        );
+        if (job.rows.length === 0) {
+            throw new NotFoundError();
+        }
+        return job.rows[0];
+    }
     /*Update existing job post, must be admin */
 
     /*Delete existing job post, must be admin */

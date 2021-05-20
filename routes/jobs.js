@@ -55,6 +55,21 @@ router.get("/", async function (req, res, next) {
         next(e);
     }
 });
+/**GET /{id} => { title, salary, equity, company_handle}
+ * Returnssingle job post.
+ * 
+*/
+router.get("/:id", async function (req, res, next) {
+    try {
+        //pass params into getJob();
+        const job = await Job.getJob(req.params.id);
+        return res.json(job);
+    } catch (e) {
+        next(e);
+    }
+});
+
+/*PATCH /:id {12} =>  */
 
 
 module.exports = router;
