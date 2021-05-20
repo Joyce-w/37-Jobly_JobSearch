@@ -28,7 +28,7 @@ Requirements:
         - Passing in a string would cause an error since the model will be unable to parse it. 
         -Testing took an hour to write/fix and the query syntax took 8.5hrs!
     
-### Part 3 (1)
+### Part 3 (2hr)
 
 - Some routes do not have authorization checks:
     ##### Companies:

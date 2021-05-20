@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 const { UnauthorizedError } = require("../expressError");
 const {
   authenticateJWT,
-  ensureLoggedIn,
+  ensureAdmin,
+  ensureValidUserOrAdmin,
 } = require("./auth");
 
 
@@ -57,15 +58,15 @@ describe("authenticateJWT", function () {
 });
 
 
-describe("ensureLoggedIn", function () {
+describe("ensureAdmin", function () {
   test("works", function () {
     expect.assertions(1);
     const req = {};
-    const res = { locals: { user: { username: "test", is_admin: false } } };
+    const res = { locals: { user: { username: "test", isAdmin: false } } };
     const next = function (err) {
-      expect(err).toBeFalsy();
+      expect(err).toBeTruthy();
     };
-    ensureLoggedIn(req, res, next);
+    ensureAdmin(req, res, next);
   });
 
   test("unauth if no login", function () {
@@ -75,6 +76,41 @@ describe("ensureLoggedIn", function () {
     const next = function (err) {
       expect(err instanceof UnauthorizedError).toBeTruthy();
     };
-    ensureLoggedIn(req, res, next);
+    ensureAdmin(req, res, next);
   });
 });
+
+describe("ensureValidUserOrAdmin", function () {
+  test("works: user but not admin", function () {
+    expect.assertions(1);
+    const req = { params: { username: 'test' } };
+    const res = { locals: { user: { username: "test", isAdmin: false } } };
+    const next = function (err) {
+      expect(err).toBeFalsy();
+    }
+    ensureValidUserOrAdmin(req, res, next);
+  });
+
+    test("Doesn't work: Not correct user or admin", function () {
+    expect.assertions(1);
+    const req = { params: { username: 'stranger' } };
+    const res = { locals: { user: { username: "test", isAdmin: false } } };
+    const next = function (err) {
+      expect(err).toBeTruthy();
+    }
+    ensureValidUserOrAdmin(req, res, next);
+  });
+
+    test("works: admin but not correct user", function () {
+    expect.assertions(1);
+    const req = { params: { username: 'stranger' } };
+    const res = { locals: { user: { username: "hello", isAdmin: true } } };
+    const next = function (err) {
+      expect(err).toBeFalsy();
+    }
+    ensureValidUserOrAdmin(req, res, next);
+  });
+
+
+
+})
