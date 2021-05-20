@@ -12,6 +12,7 @@ const Job = require("../models/job");
 //Schema section
 const jobNewSchema = require("../schemas/jobNew.json");
 const jobFilter = require("../schemas/jobFilter.json");
+const jobUpdate = require("../schemas/jobUpdate.json");
 
 const router = new express.Router();
 
@@ -24,7 +25,6 @@ const router = new express.Router();
 
 router.post("/", ensureAdmin, async function (req, res, next) {
     try {
-        console.log(req.body)
         const validator = jsonschema.validate(req.body, jobNewSchema);
         if (!validator.valid) {
             const errs = validator.errors.map(e => e.stack);
@@ -70,6 +70,19 @@ router.get("/:id", async function (req, res, next) {
 });
 
 /*PATCH /:id {12} =>  */
-
+router.patch("/:id", ensureAdmin, async function (req, res, next) {
+    try {
+        //validate json to be patch
+        const validator = jsonschema.validate(req.body, jobUpdate);
+        if (!validator.valid) {
+            const errs = validator.errors.map(e => e.stack);
+            throw new BadRequestError(errs);
+        }
+        const job = await Job.update(req.params.id, req.body);
+        return res.json({ job });
+    } catch (e) {
+        return next(e);
+    }
+});
 
 module.exports = router;

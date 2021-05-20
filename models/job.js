@@ -1,5 +1,7 @@
+const { query } = require("express");
 const db = require("../db");
 const { BadRequestError, NotFoundError } = require("../expressError");
+const { sqlForPartialUpdate } = require("../helpers/sql");
 
 /** Related functions for jobs */
 
@@ -49,6 +51,31 @@ class Job {
     }
     /*Update existing job post, must be admin */
 
+    static async update(id, data) {
+        const { setCols, values } = sqlForPartialUpdate(data,
+            {
+                title: "title",
+                salary: "salary",
+                equity: "equity",
+                company_handle: "company_handle"
+            });
+
+        const jobQuery = (`
+            UPDATE jobs
+            SET ${setCols}
+            WHERE id = ${id}
+            RETURNING title, salary, equity, company_handle`
+        );
+        
+        const result = await db.query(jobQuery, [...values])
+        let job = result.rows[0];
+
+        if (!job) {
+             throw new NotFoundError(`No job id: ${id}`);
+        }
+        return job;
+    }
+    
     /*Delete existing job post, must be admin */
 
 }

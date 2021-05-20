@@ -171,9 +171,9 @@ class Company {
         {
           numEmployees: "num_employees",
           logoUrl: "logo_url",
-        });
+      });
+    //sets one more thhan the length of values for insertion
     const handleVarIdx = "$" + (values.length + 1);
-
     const querySql = `UPDATE companies 
                       SET ${setCols} 
                       WHERE handle = ${handleVarIdx} 
