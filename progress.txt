@@ -55,3 +55,4 @@ Summary:
 
     Todo: clean up parseInt on company model!
     Combine if statment of whereClause and combinedWhereSyntax together!
+    all 3 queries yield search but any missing any less will cause error
