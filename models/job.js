@@ -30,33 +30,25 @@ class Job {
         let queryKeyCount = Object.keys(query).length;
 
         //salary syntax for minSalary, will filter through regardless since it it set to min 0;
-        let salarySyntax = `salary >= ${minSalary} AND`
+        let salarySyntax = `salary >= ${minSalary}`
 
-        //if hasEquity is true, display equity !== Null, else: display everything
-        let equityData = hasEquity ? `equity IS NOT NULL` : ``;
-
-        //false does not print ''
-        if (hasEquity) {
-            equityData = `equity IS NOT NULL`;
-        }
-        else equityData = ''
-        console.log(equityData)
         //sql syntax for searching by job title
-        let titleSyntax = title ? `title ILIKE '%${title}%' ` : ' ';
+        let titleSyntax = title ? `AND title ILIKE '%${title}%' ` : `AND title ILIKE '%%'`;
+        ;
+        
+        //if hasEquity is true, display equity !== Null, else: display everything
+        let equityData = hasEquity ? `equity > 0` : '';
+
 
 
         let combinedWhereSyntax = '';
-        let andSyntax;
 
         //if there is more than one query
-        if (queryKeyCount !== 0) {
-            //AND SYNTAX
-            andSyntax = `AND`;
-            combinedWhereSyntax = `WHERE ${salarySyntax} ${titleSyntax}${andSyntax} ${equityData}`
+  
+            combinedWhereSyntax = `WHERE ${salarySyntax} ${titleSyntax}${equityData} `
             console.log(combinedWhereSyntax)
-        }
+   
         
-        console.log(andSyntax)
 
         const jobRes = await db.query(
             `SELECT id, title, 
