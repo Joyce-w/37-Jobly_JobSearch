@@ -9,7 +9,7 @@
       "maxLength": 30
     },
     "minSalary": {
-      "type": "number",
+      "type": "integer",
       "minimum": 0
     },
     "hasEquity": {

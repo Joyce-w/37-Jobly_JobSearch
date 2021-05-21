@@ -52,3 +52,6 @@ Summary:
 Summary:
     - NUMERIC is more precise than using FLOAT and holds a larger byte. Since equity can be a small number, it is more accurate to use NUMERIC.
     - Did not do a duplicateCheck function on Job.create because some actual companies listing identical job titles.
+
+    Todo: clean up parseInt on company model!
+    Combine if statment of whereClause and combinedWhereSyntax together!

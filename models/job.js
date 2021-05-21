@@ -22,19 +22,36 @@ class Job {
     }
 
     /**Get all job listing */
-    static async findAll() {
+    static async findAll(query) {
+
+        const { title, minSalary, hasEquity } = query;
+        console.log(query)
+        //Count queries passed in
+        let keys = Object.keys(query).length;
+
+        //if hasEquity is true, display equity !== Null, else, display everything
+
+
+        let titleSyntax = title ? `title ILIKE '%${title}%'` : '';
+        console.log(titleSyntax)
+
+        let combinedWhereSyntax = '';
+
+        if (keys !== 0) {
+            combinedWhereSyntax = `WHERE ${titleSyntax}`
+        }
         const jobRes = await db.query(
             `SELECT id, title, 
             salary,
             equity,
-            company_handle FROM jobs
+            company_handle FROM jobs ${combinedWhereSyntax}
             ORDER BY title`
         );
         return jobRes.rows;
     }
 
-    /*Get single job detail*/
 
+    /*Get single job detail*/
     static async getJob(id) {
         const job = await db.query(
             `SELECT id, title, 
