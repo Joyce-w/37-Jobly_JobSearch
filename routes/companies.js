@@ -53,6 +53,10 @@ router.post("/", ensureAdmin, async function (req, res, next) {
 
 router.get("/", async function (req, res, next) {
   try {
+    
+    req.query.minEmployees = req.query.minEmployees ? +(req.query.minEmployees) : 0
+    req.query.maxEmployees = req.query.maxEmployees ? +(req.query.maxEmployees) : 0
+    
     //validate that filter fields are valid with companyFilter schema
     const validator = jsonschema.validate(req.query, companyFilter);
     if (!validator.valid) {

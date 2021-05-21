@@ -25,30 +25,20 @@ class Job {
     static async findAll(query) {
 
         const { title, minSalary, hasEquity } = query;
-        console.log(query)
-        //Count queries passed in
-        let queryKeyCount = Object.keys(query).length;
 
         //salary syntax for minSalary, will filter through regardless since it it set to min 0;
-        let salarySyntax = `salary >= ${minSalary}`
-
+        let salarySyntax = minSalary !==0 ? `AND salary >= ${minSalary}` : '';
+        
         //sql syntax for searching by job title
-        let titleSyntax = title ? `AND title ILIKE '%${title}%' ` : `AND title ILIKE '%%'`;
+        let titleSyntax = title ? `title ILIKE '%${title}%' ` : `title ILIKE '%%'`;
         ;
         
         //if hasEquity is true, display equity !== Null, else: display everything
-        let equityData = hasEquity ? `equity > 0` : '';
+        let equityData = hasEquity ? `AND equity > 0` : '';
 
-
-
+        //combined query
         let combinedWhereSyntax = '';
-
-        //if there is more than one query
-  
-            combinedWhereSyntax = `WHERE ${salarySyntax} ${titleSyntax}${equityData} `
-            console.log(combinedWhereSyntax)
-   
-        
+        combinedWhereSyntax = `WHERE ${titleSyntax} ${salarySyntax} ${equityData} `
 
         const jobRes = await db.query(
             `SELECT id, title, 

@@ -54,5 +54,3 @@ Summary:
     - Did not do a duplicateCheck function on Job.create because some actual companies listing identical job titles.
 
     Todo: clean up parseInt on company model!
-    Combine if statment of whereClause and combinedWhereSyntax together!
-    all 3 queries yield search but any missing any less will cause error

@@ -44,7 +44,7 @@ router.post("/", ensureAdmin, async function (req, res, next) {
 router.get("/", async function (req, res, next) {
     try {
         //change query to appropriate types for schema validation.
-        req.query.minSalary = req.query.minSalary ? +(req.query.minSalary) : 0
+        req.query.minSalary = req.query.minSalary ? +(req.query.minSalary) : 0;
         req.query.hasEquity = req.query.hasEquity === "true" ? true : false;
 
         const validator = jsonschema.validate(req.query, jobFilter);
