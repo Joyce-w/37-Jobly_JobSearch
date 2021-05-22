@@ -87,4 +87,28 @@ describe("GET /", function () {
         const resp = await request(app).get("/jobs/?numHires=2");
         expect(resp.statusCode).toEqual(400);
     });
+
+    test("Doesn't work: invalid query", async function () {
+        const resp = await request(app).get("/jobs/?minSalary=onehundred");
+        expect(resp.statusCode).toEqual(400);
+    });
 });
+
+describe("GET /:id", function () {
+    test("works: valid job id", async function () {
+        let res = await db.query(`SELECT id, title FROM jobs WHERE title = 'Dog walker'`);
+        let jobID = res.rows[0].id;
+
+        const resp = await request(app).get(`/jobs/${jobID}`);
+        expect(resp.statusCode).toEqual(200)
+        expect(resp.body).toEqual({
+            "id": jobID,
+            "title": "Dog walker",
+            "salary": 25000,
+            "equity": null,
+            "company_handle": "c1"
+        });
+    });
+})
+
+/********************************************PATCH /jobs */
