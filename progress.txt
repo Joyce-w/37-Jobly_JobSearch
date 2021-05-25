@@ -42,7 +42,7 @@ Summary:
     - Only admins can , create,get list of users, update, delete. admin or that user can get info on a single user.
     - Create another middleware that checks for either the correct user or an admin. Users that go to view, update, delete their own information will have access.
 
-### Part 4 (6.5+4)
+### Part 4 (6.5+4.5)
 
     - Make jobs model.
     - updating a job should never change ID or the company associiated with a job.

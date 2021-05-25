@@ -112,3 +112,91 @@ describe("GET /:id", function () {
 })
 
 /********************************************PATCH /jobs */
+
+describe("PATCH /:id", function () {
+    test("works: update as admin", async function () {
+        const res = await db.query(`SELECT id, title FROM jobs WHERE title = 'Dog walker'`);
+        let jobID = res.rows[0].id;
+
+        const resp = await request(app)
+            .patch(`/jobs/${jobID}`)
+            .send({ "equity": 0.9 })
+            .set("authorization", `Bearer ${u2AdminToken}`);
+        expect(resp.body).toEqual({
+            job: {
+                title: 'Dog walker',
+                salary: 25000,
+                equity: '0.9',
+                company_handle: 'c1'
+            }
+        });
+    });
+
+    test("Unauth with anon", async function () {
+        const res = await db.query(`SELECT id, title FROM jobs WHERE title = 'Dog walker'`);
+        let jobID = res.rows[0].id;
+        
+        const resp = await request(app)
+            .patch(`/jobs/${jobID}`)
+            .send({ "equity": 0.9 });
+        expect(resp.statusCode).toEqual(401);
+    })
+
+    test("Patching invalid data", async function () {
+        const res = await db.query(`SELECT id, title FROM jobs WHERE title = 'Dog walker'`);
+        let jobID = res.rows[0].id;
+        
+        const resp = await request(app)
+            .patch(`/jobs/${jobID}`)
+            .send({ "id": 123 })
+        .set("authorization", `Bearer ${u2AdminToken}`);
+        expect(resp.statusCode).toEqual(400);
+    })
+
+});
+
+
+/************************************************DELETE /jobs/:id */
+describe("DELETE /jobs/:id", function () {
+    test("Works for admin", async function () {
+        const res = await db.query(`SELECT id, title FROM jobs WHERE title = 'Dog walker'`);
+        let jobID = res.rows[0].id;
+        
+        const resp = await request(app)
+            .delete(`/jobs/${jobID}`)
+            .send({ "id": 123 })
+        .set("authorization", `Bearer ${u2AdminToken}`);
+        expect(resp.body).toEqual({ deleted: `${jobID}` });
+        expect(resp.statusCode).toEqual(200);
+    });
+
+    test("Does not work for non-Admin", async function () {
+        const res = await db.query(`SELECT id, title FROM jobs WHERE title = 'Dog walker'`);
+        let jobID = res.rows[0].id;
+
+        const resp = await request(app)
+            .delete(`/jobs/${jobID}`);
+            expect(resp.statusCode).toEqual(401);
+    });
+
+    test("Works for admin", async function () {
+        const res = await db.query(`SELECT id, title FROM jobs WHERE title = 'Dog walker'`);
+        let jobID = res.rows[0].id;
+        
+        const resp = await request(app)
+            .delete(`/jobs/${jobID}`)
+            .send({ "id": 123 })
+        .set("authorization", `Bearer ${u2AdminToken}`);
+        expect(resp.body).toEqual({ deleted: `${jobID}` });
+        expect(resp.statusCode).toEqual(200);
+    });
+
+    test("No such job", async function(){
+        const resp = await request(app)
+            .delete(`/jobs/0`)
+            .set("authorization", `Bearer ${u2AdminToken}`);
+
+        expect(resp.statusCode).toEqual(404);
+        expect(resp.body.error.message).toEqual("No id of 0 found to be deleted.");
+    })
+})
