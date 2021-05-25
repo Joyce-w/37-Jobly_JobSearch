@@ -27,5 +27,21 @@ describe("create", function () {
         
         let job = await Job.create(validJob);
         console.log(job)
-    })
-})
+    });
+});
+
+/**************************************** findAll */
+describe("findAll", function () {
+    test("works", async function () {
+
+        const jobQuery = { /**Doesnt work? fkey restraint? */
+            minSalary: 0,
+            maxSalary: "100000",
+            title: 'scientist'
+        }
+        
+        let job = await Job.findAll(jobQuery);
+        expect(job.length).toEqual(3)
+    });
+});
+
