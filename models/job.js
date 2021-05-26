@@ -67,8 +67,8 @@ class Job {
         }
         return job.rows[0];
     }
-    /*Update existing job post, must be admin */
 
+    /*Update existing job post, must be admin */
     static async update(id, data) {
         const { setCols, values } = sqlForPartialUpdate(data,
             {
