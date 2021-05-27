@@ -156,3 +156,15 @@ describe("delete", function () {
         }
     });
 });
+
+/**************************************addApplicant */
+describe("addApplicant", function () {
+    test("add user and job id", async function () {
+        const res = await db.query(`SELECT title, id, salary FROM jobs WHERE title ='Dog walker'`);
+        let job_id = res.rows[0].id;
+
+        const application = await Job.addApplicant('u1', job_id);
+        expect(application).toBe(job_id);
+    });
+
+});

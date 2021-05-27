@@ -111,13 +111,26 @@ class Job {
     }
 
     /**Adds user to job as applicant to via a job ID */
-    static async addApplicant(username, id){
+    static async addApplicant(username, id) {
+        //query for username and id
+        const queryID = await db.query(`
+        SELECT id, title FROM jobs WHERE id=$1`, [id]);
+
+        const queryUsername = await db.query(`
+        SELECT username FROM users WHERE username=$1`, [username]);
+
+        //throw error if it does not exist
+        if(!queryID || ! queryUsername){
+            throw new NotFoundError(`Error in username or id`)
+        }
+
         const res = await db.query(`
         INSERT INTO applications
         (username, job_id)
         VALUES ($1, $2)
         RETURNING username, job_id`,
-        [username, id]);
+            [username, id]);
+
         return res.rows[0].job_id;
     }
 }

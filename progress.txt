@@ -54,13 +54,18 @@ Summary:
 
 ### Part 4 (3)
 - Create route POST /users/:username/jobs/:id that llows user to apply for a job or an admin to do it for them
-
-Note:
-list out every route in insomnia and have the outcome to each route being hit
-you can export that as json from Insomnia and you can provide that with your upload so they can see your documentation
+- Change output of get all info methods and routes for users so they include list of jobID the user applied for.
 
 Todo: 
 -create a job_id to testCommons.js to test routes
+
+Summary:
+- Cannot test invalid data for addApplication. Throws parserError 
+
+note:
+- List out every route in insomnia and have the outcome to each route being hit
+- You can export that as json from Insomnia and you can provide that with your upload so they can see your documentation
+
 
 
 Questions:
