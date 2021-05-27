@@ -9,6 +9,7 @@ const { ensureAdmin, ensureValidUserOrAdmin } = require("../middleware/auth");
 const { BadRequestError } = require("../expressError");
 
 const User = require("../models/user");
+const Job = require("../models/job")
 const { createToken } = require("../helpers/tokens");
 const userNewSchema = require("../schemas/userNew.json");
 const userUpdateSchema = require("../schemas/userUpdate.json");
@@ -120,26 +121,30 @@ router.delete("/:username", ensureValidUserOrAdmin, async function (req, res, ne
   }
 });
 
-
-module.exports = router;
-
-
 /**POST /:username/jobs/:id
  * Allows user(or admin) to apply for a job 
+ * Takes username/id from params, not body!
+ * user params must be local user or admin
  */
-router.post("/:username/jobs/:id", ensureValidUserOrAdmin, async function (req, res, next){
-  try{
-    //validate json
-    const validator = jsonschema.validate(req.body, userApplicantion)
+router.post("/:username/jobs/:id", ensureValidUserOrAdmin,async function (req, res, next){
+  try {
+    const { username, id } = req.params
+    req.params.id = +req.params.id;
+
+    // validate json
+    const validator = jsonschema.validate(req.params, userApplicantion)
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
     }
-
+    
     //pass into User.addApplicant(username, id)
-    const job_id = await User.addApplicant(username, id);
-    res.json(job_id)
+    const job_id = await Job.addApplicant(username, id);
+    return res.json({applied: job_id})
   } catch(e){
     next(e)
   }
 })
+
+
+module.exports = router;

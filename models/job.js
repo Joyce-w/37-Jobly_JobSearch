@@ -113,12 +113,12 @@ class Job {
     /**Adds user to job as applicant to via a job ID */
     static async addApplicant(username, id){
         const res = await db.query(`
-        INSER INTO applications
-        ($1, $2)
-        VALUES (username, id)
-        RETURNING username, id`,
+        INSERT INTO applications
+        (username, job_id)
+        VALUES ($1, $2)
+        RETURNING username, job_id`,
         [username, id]);
-        return res.rows[0].id;
+        return res.rows[0].job_id;
     }
 }
 

@@ -52,9 +52,17 @@ Summary:
     - NUMERIC is more precise than using FLOAT and holds a larger byte. Since equity can be a small number, it is more accurate to use NUMERIC.
     - Did not do a duplicateCheck function on Job.create because some actual companies listing identical job titles.
 
-### Part 4 
+### Part 4 (3)
 - Create route POST /users/:username/jobs/:id that llows user to apply for a job or an admin to do it for them
 
 Note:
 list out every route in insomnia and have the outcome to each route being hit
 you can export that as json from Insomnia and you can provide that with your upload so they can see your documentation
+
+Todo: 
+-create a job_id to testCommons.js to test routes
+
+
+Questions:
+- Is it ideal to group HTTP verbs together even though they don't relate? 
+(e.g. "POST/ users": allows admins to create users while "POST/:username/jobs/:id" allows users/admins to submit a job application. Not really related! while "GET/users" & "GET/users/:username" is more related.)
