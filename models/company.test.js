@@ -176,8 +176,6 @@ describe("findAll", function () {
 
 describe("get", function () {
   test("works", async function () {
-    const res = await db.query(`SELECT id, title FROM jobs WHERE title='Dog walker' `)
-    const jobID = (res.rows[0].id)
 
     let company = await Company.get("c1");
     expect(company.jobs.length).toEqual(1)
