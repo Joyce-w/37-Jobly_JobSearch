@@ -109,6 +109,17 @@ class Job {
             throw new NotFoundError(`No id of ${id} found to be deleted.`)
         }
     }
+
+    /**Adds user to job as applicant to via a job ID */
+    static async addApplicant(username, id){
+        const res = await db.query(`
+        INSER INTO applications
+        ($1, $2)
+        VALUES (username, id)
+        RETURNING username, id`,
+        [username, id]);
+        return res.rows[0].id;
+    }
 }
 
 module.exports = Job;

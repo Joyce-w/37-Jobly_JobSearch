@@ -12,6 +12,7 @@ const User = require("../models/user");
 const { createToken } = require("../helpers/tokens");
 const userNewSchema = require("../schemas/userNew.json");
 const userUpdateSchema = require("../schemas/userUpdate.json");
+const userApplicantion = require("../schemas/userApplicant.json")
 
 const router = express.Router();
 
@@ -121,3 +122,24 @@ router.delete("/:username", ensureValidUserOrAdmin, async function (req, res, ne
 
 
 module.exports = router;
+
+
+/**POST /:username/jobs/:id
+ * Allows user(or admin) to apply for a job 
+ */
+router.post("/:username/jobs/:id", ensureValidUserOrAdmin, async function (req, res, next){
+  try{
+    //validate json
+    const validator = jsonschema.validate(req.body, userApplicantion)
+    if (!validator.valid) {
+      const errs = validator.errors.map(e => e.stack);
+      throw new BadRequestError(errs);
+    }
+
+    //pass into User.addApplicant(username, id)
+    const job_id = await User.addApplicant(username, id);
+    res.json(job_id)
+  } catch(e){
+    next(e)
+  }
+})
