@@ -1,5 +1,3 @@
-const { compareSync } = require("bcrypt");
-const { query } = require("express");
 const db = require("../db");
 const { BadRequestError, NotFoundError } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");

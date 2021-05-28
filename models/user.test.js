@@ -110,21 +110,23 @@ describe("register", function () {
 describe("findAll", function () {
   test("works", async function () {
     const users = await User.findAll();
-    expect(users).toEqual([
+    expect(users).toEqual( [
       {
-        username: "u1",
-        firstName: "U1F",
-        lastName: "U1L",
-        email: "u1@email.com",
+        username: 'u1',
+        firstName: 'U1F',
+        lastName: 'U1L',
+        email: 'u1@email.com',
         isAdmin: false,
+        jobid: [ null ]
       },
       {
-        username: "u2",
-        firstName: "U2F",
-        lastName: "U2L",
-        email: "u2@email.com",
+        username: 'u2',
+        firstName: 'U2F',
+        lastName: 'U2L',
+        email: 'u2@email.com',
         isAdmin: false,
-      },
+        jobid: [ null ]
+      }
     ]);
   });
 });

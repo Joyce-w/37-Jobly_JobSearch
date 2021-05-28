@@ -106,13 +106,16 @@ class User {
 
   static async findAll() {
     const result = await db.query(
-          `SELECT username,
-                  first_name AS "firstName",
-                  last_name AS "lastName",
-                  email,
-                  is_admin AS "isAdmin"
-           FROM users
-           ORDER BY username`,
+          `SELECT u.username,
+            u.first_name AS "firstName",
+            u.last_name AS "lastName",
+            u.email,
+            u.is_admin AS "isAdmin",
+          ARRAY_AGG(a.job_id) AS jobID
+          FROM users AS u
+          FULL JOIN applications AS a ON a.username = u.username
+          GROUP BY u.username
+          ORDER BY u.username`,
     );
 
     return result.rows;

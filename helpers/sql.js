@@ -1,7 +1,7 @@
 const { BadRequestError } = require("../expressError");
 
 // THIS NEEDS SOME GREAT DOCUMENTATION.
-/**Partially updates user's firstName, lastName, isAdmin */
+/**Used in company, user, and job models */
 
 function sqlForPartialUpdate(dataToUpdate, jsToSql) {
   /*Array of keys from model/user.js data
