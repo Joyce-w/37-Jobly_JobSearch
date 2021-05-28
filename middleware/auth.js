@@ -46,7 +46,6 @@ function ensureLoggedIn(req, res, next) {
 
 function ensureAdmin(req, res, next) {
   try {
-    console.log(res.locals.user)
     //checks to see if admin is in the payload
     if (res.locals.user) {
       const {isAdmin } = res.locals.user;
