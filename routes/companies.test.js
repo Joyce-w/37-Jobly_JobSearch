@@ -11,7 +11,8 @@ const {
   commonAfterEach,
   commonAfterAll,
   u1Token,
-  u2AdminToken
+  u2AdminToken,
+  job_id
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -70,6 +71,7 @@ describe("POST /companies", function () {
 describe("GET /companies", function () {
   test("ok for anon", async function () {
     const resp = await request(app).get("/companies");
+    console.log(resp.body)
     expect(resp.body).toEqual({
       companies:
           [
@@ -160,16 +162,25 @@ describe("GET /companies", function () {
 // /************************************** GET /companies/:handle */
 
 describe("GET /companies/:handle", function () {
+  
   test("works for anon", async function () {
+
+    const jobs = await db.query(`SELECT id FROM jobs WHERE company_handle='c1'`);
+
     const resp = await request(app).get(`/companies/c1`);
+
     expect(resp.body).toEqual({
       company: {
-        handle: "c1",
-        name: "C1",
-        description: "Desc1",
+        handle: 'c1',
+        name: 'C1',
+        description: 'Desc1',
         numEmployees: 1,
-        logoUrl: "http://c1.img",
+        logoUrl: 'http://c1.img'
       },
+      jobs: [
+        { id: jobs.rows[0].id, title: 'Dog walker', salary: 25000, equity: null },
+        { id: jobs.rows[1].id, title: 'Cat walker', salary: 25000, equity: '0.001' }
+      ]
     });
   });
 
@@ -177,12 +188,13 @@ describe("GET /companies/:handle", function () {
     const resp = await request(app).get(`/companies/c2`);
     expect(resp.body).toEqual({
       company: {
-        handle: "c2",
-        name: "C2",
-        description: "Desc2",
+        handle: 'c2',
+        name: 'C2',
+        description: 'Desc2',
         numEmployees: 2,
-        logoUrl: "http://c2.img",
+        logoUrl: 'http://c2.img'
       },
+      jobs: []
     });
   });
 
