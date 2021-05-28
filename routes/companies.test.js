@@ -71,7 +71,6 @@ describe("POST /companies", function () {
 describe("GET /companies", function () {
   test("ok for anon", async function () {
     const resp = await request(app).get("/companies");
-    console.log(resp.body)
     expect(resp.body).toEqual({
       companies:
           [
@@ -272,7 +271,6 @@ describe("DELETE /companies/:handle", function () {
     const resp = await request(app)
         .delete(`/companies/c1`)
       .set("authorization", `Bearer ${u2AdminToken}`);
-    console.log(resp.body)
     expect(resp.body).toEqual({ deleted: "c1" });
   });
 
